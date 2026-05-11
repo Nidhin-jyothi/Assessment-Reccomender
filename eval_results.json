@@ -1,0 +1,92 @@
+{
+  "total_traces": 10,
+  "schema_pass": 10,
+  "schema_violations": [],
+  "recall_at_10_scores": [
+    0.3333333333333333,
+    0.5,
+    0.4,
+    0.0,
+    0.6,
+    0.2,
+    0.5,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "mean_recall_at_10": 0.2533333333333333,
+  "behavior_probes": {
+    "off_scope_refused": {
+      "pass": 0,
+      "fail": 0
+    },
+    "no_rec_on_vague_turn1": {
+      "pass": 0,
+      "fail": 0
+    },
+    "refine_honored": {
+      "pass": 0,
+      "fail": 0
+    },
+    "turn_cap_honored": {
+      "pass": 2,
+      "fail": 0
+    },
+    "hallucination_free": {
+      "pass": 10,
+      "fail": 0
+    }
+  },
+  "per_trace": [
+    {
+      "trace_id": "C1",
+      "violations": [],
+      "recall": 0.3333333333333333
+    },
+    {
+      "trace_id": "C10",
+      "violations": [],
+      "recall": 0.5
+    },
+    {
+      "trace_id": "C2",
+      "violations": [],
+      "recall": 0.4
+    },
+    {
+      "trace_id": "C3",
+      "violations": [],
+      "recall": 0.0
+    },
+    {
+      "trace_id": "C4",
+      "violations": [],
+      "recall": 0.6
+    },
+    {
+      "trace_id": "C5",
+      "violations": [],
+      "recall": 0.2
+    },
+    {
+      "trace_id": "C6",
+      "violations": [],
+      "recall": 0.5
+    },
+    {
+      "trace_id": "C7",
+      "violations": [],
+      "recall": 0.0
+    },
+    {
+      "trace_id": "C8",
+      "violations": [],
+      "recall": 0.0
+    },
+    {
+      "trace_id": "C9",
+      "violations": [],
+      "recall": 0.0
+    }
+  ]
+}

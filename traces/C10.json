@@ -1,0 +1,22 @@
+{
+  "id": "C10",
+  "expected_shortlist": [
+    "https://www.shl.com/products/product-catalog/view/shl-verify-interactive-g/",
+    "https://www.shl.com/products/product-catalog/view/graduate-scenarios/"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "content": "We run a graduate management trainee scheme. We need a full battery - cognitive, personality, and situational judgement. All recent graduates."
+    },
+    {
+      "role": "user",
+      "content": "But can you remove the OPQ32r and replace it with something shorter? Candidates complain it takes too long."
+    },
+    {
+      "role": "user",
+      "content": "Drop the OPQ. Final list: Verify G+ and Graduate Scenarios."
+    }
+  ],
+  "probes": {}
+}

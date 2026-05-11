@@ -1,0 +1,25 @@
+{
+  "id": "C2",
+  "expected_shortlist": [
+    "https://www.shl.com/products/product-catalog/view/smart-interview-live-coding/",
+    "https://www.shl.com/products/product-catalog/view/linux-programming-general/",
+    "https://www.shl.com/products/product-catalog/view/networking-and-implementation-new/",
+    "https://www.shl.com/products/product-catalog/view/shl-verify-interactive-g/",
+    "https://www.shl.com/products/product-catalog/view/occupational-personality-questionnaire-opq32r/"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "content": "I'm hiring a senior Rust engineer for high-performance networking infrastructure. What assessments should I use?"
+    },
+    {
+      "role": "user",
+      "content": "Yes, go ahead. Should I also add a cognitive test for this level?"
+    },
+    {
+      "role": "user",
+      "content": "That works. Thanks."
+    }
+  ],
+  "probes": {}
+}

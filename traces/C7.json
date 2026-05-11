@@ -1,0 +1,29 @@
+{
+  "id": "C7",
+  "expected_shortlist": [
+    "https://www.shl.com/products/product-catalog/view/hipaa-security/",
+    "https://www.shl.com/products/product-catalog/view/medical-terminology-new/",
+    "https://www.shl.com/products/product-catalog/view/microsoft-word-365-essentials-new/",
+    "https://www.shl.com/products/product-catalog/view/dependability-and-safety-instrument-dsi/",
+    "https://www.shl.com/products/product-catalog/view/occupational-personality-questionnaire-opq32r/"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "content": "We're hiring bilingual healthcare admin staff in South Texas - they handle patient records and need to be assessed in Spanish. HIPAA compliance is critical. What assessments work?"
+    },
+    {
+      "role": "user",
+      "content": "They're functionally bilingual - English fluent for written work. Go with the hybrid."
+    },
+    {
+      "role": "user",
+      "content": "Are we legally required under HIPAA to test all staff who touch patient records? And does this SHL test satisfy that requirement?"
+    },
+    {
+      "role": "user",
+      "content": "Understood. Keep the shortlist as-is."
+    }
+  ],
+  "probes": {}
+}

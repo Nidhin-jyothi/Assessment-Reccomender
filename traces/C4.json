@@ -1,0 +1,25 @@
+{
+  "id": "C4",
+  "expected_shortlist": [
+    "https://www.shl.com/products/product-catalog/view/shl-verify-interactive-numerical-reasoning/",
+    "https://www.shl.com/products/product-catalog/view/financial-accounting-new/",
+    "https://www.shl.com/products/product-catalog/view/basic-statistics-new/",
+    "https://www.shl.com/products/product-catalog/view/graduate-scenarios/",
+    "https://www.shl.com/products/product-catalog/view/occupational-personality-questionnaire-opq32r/"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "content": "Hiring graduate financial analysts - final-year students, no work experience. We need numerical reasoning and a finance knowledge test."
+    },
+    {
+      "role": "user",
+      "content": "Good. Can you also add a situational judgement element - work-context decision making for graduates?"
+    },
+    {
+      "role": "user",
+      "content": "That covers it. Numerical + Graduate Scenarios as first filter, domain tests for shortlisted candidates."
+    }
+  ],
+  "probes": {}
+}

@@ -1,0 +1,25 @@
+{
+  "id": "C5",
+  "expected_shortlist": [
+    "https://www.shl.com/products/product-catalog/view/global-skills-assessment/",
+    "https://www.shl.com/products/product-catalog/view/global-skills-development-report/",
+    "https://www.shl.com/products/product-catalog/view/occupational-personality-questionnaire-opq32r/",
+    "https://www.shl.com/products/product-catalog/view/opq-mq-sales-report/",
+    "https://www.shl.com/products/product-catalog/view/salestransformationreport2-0-individualcontributor/"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "content": "As part of our restructuring and annual talent audit, we need to re-skill our Sales organization. What solutions do you recommend?"
+    },
+    {
+      "role": "user",
+      "content": "What's the difference between OPQ and OPQ MQ Sales Report?"
+    },
+    {
+      "role": "user",
+      "content": "Clear. We'll use OPQ for everyone and add MQ only where we want motivators in the Sales Report; keeping the five solutions as our audit stack."
+    }
+  ],
+  "probes": {}
+}

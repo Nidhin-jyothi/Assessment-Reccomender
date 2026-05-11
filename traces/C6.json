@@ -1,0 +1,22 @@
+{
+  "id": "C6",
+  "expected_shortlist": [
+    "https://www.shl.com/products/product-catalog/view/safety-and-dependability-focus-8-0/",
+    "https://www.shl.com/products/product-catalog/view/workplace-health-and-safety-new/"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "content": "We're hiring plant operators for a chemical facility. Safety is absolute top priority - reliability, procedure compliance, never cutting corners. What do you recommend?"
+    },
+    {
+      "role": "user",
+      "content": "What's the difference between the DSI and the Safety & Dependability 8.0?"
+    },
+    {
+      "role": "user",
+      "content": "We're industrial. The 8.0 bundle is the right fit. Confirmed."
+    }
+  ],
+  "probes": {}
+}

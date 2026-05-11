@@ -1,0 +1,25 @@
+{
+  "id": "C8",
+  "expected_shortlist": [
+    "https://www.shl.com/products/product-catalog/view/microsoft-excel-365-new/",
+    "https://www.shl.com/products/product-catalog/view/microsoft-word-365-new/",
+    "https://www.shl.com/products/product-catalog/view/ms-excel-new/",
+    "https://www.shl.com/products/product-catalog/view/ms-word-new/",
+    "https://www.shl.com/products/product-catalog/view/occupational-personality-questionnaire-opq32r/"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "content": "I need to quickly screen admin assistants for Excel and Word daily."
+    },
+    {
+      "role": "user",
+      "content": "In that case, I am OK with adding a simulation - we want to capture the capabilties."
+    },
+    {
+      "role": "user",
+      "content": "That's good."
+    }
+  ],
+  "probes": {}
+}

@@ -1,0 +1,27 @@
+{
+  "id": "C1",
+  "expected_shortlist": [
+    "https://www.shl.com/products/product-catalog/view/occupational-personality-questionnaire-opq32r/",
+    "https://www.shl.com/products/product-catalog/view/opq-universal-competency-report-2-0/",
+    "https://www.shl.com/products/product-catalog/view/opq-leadership-report/"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "content": "We need a solution for senior leadership."
+    },
+    {
+      "role": "user",
+      "content": "The pool consists of CXOs, director-level postions; people with more than 15 years of experience."
+    },
+    {
+      "role": "user",
+      "content": "Selection - comparing candidates against a leadership benchmark."
+    },
+    {
+      "role": "user",
+      "content": "Perfect, that's what we need."
+    }
+  ],
+  "probes": {}
+}

@@ -1,0 +1,43 @@
+{
+  "id": "C9",
+  "expected_shortlist": [
+    "https://www.shl.com/products/product-catalog/view/core-java-advanced-level-new/",
+    "https://www.shl.com/products/product-catalog/view/spring-new/",
+    "https://www.shl.com/products/product-catalog/view/sql-new/",
+    "https://www.shl.com/products/product-catalog/view/amazon-web-services-aws-development-new/",
+    "https://www.shl.com/products/product-catalog/view/docker-new/",
+    "https://www.shl.com/products/product-catalog/view/shl-verify-interactive-g/",
+    "https://www.shl.com/products/product-catalog/view/occupational-personality-questionnaire-opq32r/"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "content": "Here's the JD for an engineer we need to fill. Can you recommend an assessment battery?"
+    },
+    {
+      "role": "user",
+      "content": "Backend-leaning. Day-one priorities are Core Java and Spring; SQL is constant. Angular is occasional - they'd review frontend PRs but not own features."
+    },
+    {
+      "role": "user",
+      "content": "Senior IC. They lead design on their own services but don't manage other engineers directly."
+    },
+    {
+      "role": "user",
+      "content": "Add AWS and Docker. Drop REST - the API design signal will already come through in Spring and the live interview."
+    },
+    {
+      "role": "user",
+      "content": "On Java - they'd be working on existing services, not greenfield. Is the Advanced level the right pick?"
+    },
+    {
+      "role": "user",
+      "content": "Do we really need Verify G+ on top of all the technical tests? Feels redundant."
+    },
+    {
+      "role": "user",
+      "content": "Keep Verify G+. Locking it in."
+    }
+  ],
+  "probes": {}
+}
