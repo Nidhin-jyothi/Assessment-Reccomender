@@ -10,4 +10,4 @@ services:
       - key: CATALOG_PATH
         value: shl_catalog.json
       - key: PYTHON_VERSION
-        value: 3.11.15
+        value: 3.11.10
