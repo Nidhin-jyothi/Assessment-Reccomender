@@ -45,18 +45,25 @@ CATALOG_PATH = os.getenv("CATALOG_PATH", "shl_catalog.json")
 MAX_TURNS = 8  # from spec: evaluator caps at 8 turns
 
 
-#  Lifespan (replaces deprecated @app.on_event) 
+#  Lifespan 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global _catalog, _retriever, _agent
-    logger.info("Starting up - loading catalog and building indexes...")
-    t0 = time.time()
+    import threading
+    def load_heavy_stuff():
+        global _catalog, _retriever, _agent
+        logger.info("Background Startup - loading catalog and building indexes...")
+        t0 = time.time()
+        try:
+            _catalog   = load_catalog(CATALOG_PATH)
+            _retriever = HybridRetriever(_catalog)
+            _agent     = SHLAgent(_catalog, _retriever)
+            logger.info(f"Startup complete in {time.time() - t0:.1f}s | {len(_catalog)} assessments indexed.")
+        except Exception as e:
+            logger.error(f"Startup failed: {e}", exc_info=True)
 
-    _catalog   = load_catalog(CATALOG_PATH)
-    _retriever = HybridRetriever(_catalog)
-    _agent     = SHLAgent(_catalog, _retriever)
-
-    logger.info(f"Startup complete in {time.time() - t0:.1f}s | {len(_catalog)} assessments indexed.")
+    # Start loading in background thread so port opens immediately
+    threading.Thread(target=load_heavy_stuff, daemon=True).start()
+    
     yield
     logger.info("Shutting down.")
 
