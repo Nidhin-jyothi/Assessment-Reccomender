@@ -13,8 +13,9 @@ langchain-google-genai==2.0.9
 # Vector store
 chromadb==0.5.23
 
-# Embeddings
-sentence-transformers==3.3.1
+# Gemini Embeddings via modern SDK (API-based, no local model / no torch needed)
+google-generativeai>=0.8.0
+google-genai>=1.0.0
 
 # Sparse retrieval
 rank-bm25==0.2.2

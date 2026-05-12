@@ -6,25 +6,55 @@ retriever.py - Hybrid retrieval: ChromaDB (dense) + BM25 (sparse) + reranking.
 from __future__ import annotations
 
 import os
-import re
-from pathlib import Path
+import time
 from typing import Optional
 
 import chromadb
-from chromadb.utils import embedding_functions
+from chromadb import Documents, EmbeddingFunction, Embeddings
 from rank_bm25 import BM25Okapi
+from google import genai
+from google.genai import types as gtypes
 
 from catalog import Catalog, CatalogItem
 
 
 #  Config 
-CHROMA_PERSIST_DIR  = "./chroma_db"
+CHROMA_PERSIST_DIR  = "./chroma_db"  # unused on Render (ephemeral FS)
 COLLECTION_NAME     = "shl_catalog"
-EMBEDDING_MODEL     = "all-MiniLM-L6-v2"   # fast, free, good quality
+EMBEDDING_MODEL     = "gemini-embedding-001"   # correct model name
 TOP_K_DENSE         = 20
 TOP_K_BM25          = 20
 TOP_K_FINAL         = 10
 RRF_K               = 60   # Reciprocal Rank Fusion constant
+
+
+class GeminiEmbeddingFunction(EmbeddingFunction):
+    """
+    ChromaDB-compatible embedding function using Google's Gemini gemini-embedding-001.
+    Uses task_type='RETRIEVAL_DOCUMENT' for indexing and 'RETRIEVAL_QUERY' for queries.
+    """
+
+    def __init__(self, task_type: str = "RETRIEVAL_DOCUMENT"):
+        api_key = os.getenv("GOOGLE_API_KEY")
+        if not api_key:
+            raise ValueError("GOOGLE_API_KEY environment variable not set")
+        self._client = genai.Client(api_key=api_key)
+        self._task_type = task_type
+
+    def __call__(self, input: Documents) -> Embeddings:
+        embeddings: Embeddings = []
+        BATCH = 50  # conservative batch size for rate limiting
+        for i in range(0, len(input), BATCH):
+            batch = input[i : i + BATCH]
+            result = self._client.models.embed_content(
+                model=EMBEDDING_MODEL,
+                contents=batch,
+                config=gtypes.EmbedContentConfig(task_type=self._task_type),
+            )
+            embeddings.extend([e.values for e in result.embeddings])
+            if i + BATCH < len(input):
+                time.sleep(1.0)  # respect rate limits during bulk indexing
+        return embeddings
 
 
 def _tokenize(text: str) -> list[str]:
@@ -38,17 +68,16 @@ class HybridRetriever:
     with Reciprocal Rank Fusion for merging.
     """
 
-    def __init__(self, catalog: Catalog, persist_dir: str = CHROMA_PERSIST_DIR):
+    def __init__(self, catalog: Catalog):
         self.catalog     = catalog
         self._items      = catalog.all_items()
         self._id_to_item = {item.entity_id: item for item in self._items}
 
-        #  Dense index (ChromaDB) 
-        self._ef = embedding_functions.SentenceTransformerEmbeddingFunction(
-            model_name=EMBEDDING_MODEL
-        )
-        self._chroma_client = chromadb.PersistentClient(path=persist_dir)
-        self._collection = self._get_or_build_collection()
+        #  Dense index (ChromaDB in-memory + Gemini Embeddings) 
+        self._ef = GeminiEmbeddingFunction(task_type="RETRIEVAL_DOCUMENT")
+        self._ef_query = GeminiEmbeddingFunction(task_type="RETRIEVAL_QUERY")
+        self._chroma_client = chromadb.EphemeralClient()  # in-memory; safe for stateless Render
+        self._collection = self._build_collection()
 
         #  Sparse index (BM25) 
         self._bm25_corpus  = [_tokenize(item.corpus) for item in self._items]
@@ -56,47 +85,30 @@ class HybridRetriever:
 
         print(f"[Retriever] Ready - {len(self._items)} items indexed.")
 
-    def _get_or_build_collection(self) -> chromadb.Collection:
-        """Get existing collection or build+persist a new one."""
-        existing = [c.name for c in self._chroma_client.list_collections()]
-
-        if COLLECTION_NAME in existing:
-            collection = self._chroma_client.get_collection(
-                name=COLLECTION_NAME,
-                embedding_function=self._ef,
-            )
-            # Validate size matches catalog
-            if collection.count() == len(self._items):
-                print(f"[Retriever] Loaded existing ChromaDB collection ({collection.count()} items).")
-                return collection
-            else:
-                print(f"[Retriever] Collection size mismatch - rebuilding.")
-                self._chroma_client.delete_collection(COLLECTION_NAME)
-
-        return self._build_collection()
-
     def _build_collection(self) -> chromadb.Collection:
-        """Build ChromaDB collection from catalog items."""
-        print("[Retriever] Building ChromaDB collection (first run, ~1-2 min)...")
+        """Build in-memory ChromaDB collection with Gemini embeddings."""
+        print("[Retriever] Building ChromaDB collection via Gemini embeddings...")
         collection = self._chroma_client.create_collection(
             name=COLLECTION_NAME,
-            embedding_function=self._ef,
             metadata={"hnsw:space": "cosine"},
         )
 
-        # Batch upsert (ChromaDB handles batching internally)
-        BATCH = 100
         items = self._items
-        for i in range(0, len(items), BATCH):
-            batch = items[i : i + BATCH]
+        # Pre-compute embeddings in batches (task_type=RETRIEVAL_DOCUMENT)
+        CHROMA_BATCH = 100
+        all_embeddings = self._ef([item.corpus for item in items])
+
+        for i in range(0, len(items), CHROMA_BATCH):
+            batch      = items[i : i + CHROMA_BATCH]
+            batch_embs = all_embeddings[i : i + CHROMA_BATCH]
             collection.add(
                 ids        = [item.entity_id for item in batch],
-                documents  = [item.corpus    for item in batch],
+                embeddings = batch_embs,
                 metadatas  = [
                     {
-                        "name":      item.name,
-                        "url":       item.url,
-                        "keys":      ",".join(item.keys),
+                        "name":       item.name,
+                        "url":        item.url,
+                        "keys":       ",".join(item.keys),
                         "job_levels": ",".join(item.job_levels),
                     }
                     for item in batch
@@ -108,14 +120,16 @@ class HybridRetriever:
     #  Dense retrieval 
     def _dense_search(self, query: str, k: int = TOP_K_DENSE) -> list[tuple[str, float]]:
         """Returns list of (entity_id, similarity_score)."""
+        # Use query-specific embedding function for better retrieval quality
+        query_embedding = self._ef_query([query])[0]
         results = self._collection.query(
-            query_texts=[query],
+            query_embeddings=[query_embedding],
             n_results=min(k, len(self._items)),
             include=["distances"],
         )
         ids       = results["ids"][0]
         distances = results["distances"][0]
-        # ChromaDB cosine distance  similarity: sim = 1 - dist
+        # ChromaDB cosine distance -> similarity: sim = 1 - dist
         return [(eid, 1.0 - dist) for eid, dist in zip(ids, distances)]
 
     #  Sparse retrieval 

@@ -117,8 +117,12 @@ async def chat(request: ChatRequest) -> ChatResponse:
     Full conversation history must be included on every call.
     """
     if _agent is None:
-        logger.error("Agent not initialized - startup may have failed.")
-        raise HTTPException(status_code=503, detail="Service not ready")
+        logger.warning("Agent still warming up - returning hold message.")
+        return ChatResponse(
+            reply="I'm still warming up (loading the assessment catalog). Please try again in a moment.",
+            recommendations=[],
+            end_of_conversation=False,
+        )
 
     messages = request.messages
 
